@@ -1,52 +1,102 @@
 import { Link } from "@inertiajs/react";
-import React, { useState } from "react";
-import { HiMenuAlt3 } from "react-icons/hi";
+import React, { useState, useEffect } from "react";
 import { BiHomeCircle } from "react-icons/bi";
-import { BiSearch } from "react-icons/bi";
 import { PiPlaylistFill } from "react-icons/pi";
 import { FiLogOut } from "react-icons/fi";
 import { BsFillPeopleFill } from "react-icons/bs";
 import { BsFillHeartFill } from "react-icons/bs";
+import { MdOutlineLibraryMusic } from "react-icons/md";
+
 const Sidebar = () => {
-    const menus = [
-        { name: "Home", link: "/", icon: BiHomeCircle },
-        { name: "Search", link: "/", icon: BiSearch },
-        { name: "Artist", link: "/", icon: BsFillPeopleFill },
-        { name: "Playlist", link: "/", icon: PiPlaylistFill, margin: true },
-        { name: "Liked", link: "/", icon: BsFillHeartFill },
+    const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 1024);
+    const [isOpen, setIsOpen] = useState(true);
+    
+    useEffect(() => {
+        const handleResize = () => {
+            setIsDesktop(window.innerWidth >= 1024);
+        };
 
-        { name: "Logout", link: "/", icon: FiLogOut, margin: true },
-    ];
+        window.addEventListener("resize", handleResize);
+        return () => {
+            window.removeEventListener("resize", handleResize);
+        };
+    }, []);
 
-    //mari kita buat untuk responsif tutup buka side barnya
-    const [open, setOpen] = useState(true)
     return (
-        //bagian side bar
-        <div>
-            <div className={`backdrop-blur-sm bg-Bgtrans ${open ? ' w-56' : 'w-16' } min-h-screen duration-500 px-5 rounded-xl`}>
-                <div className="py-3 flex justify-end">
-                {open && (
-            <>
-              <h1 className="text-white font-bold mr-20 font-Teko text-xl">BayuMusic</h1>
-            </>
-          )}
-                    {/* buat agar tombol bisa digunakan untuk tutup buka menu */}
-                    <HiMenuAlt3 size={26} className="cursor-pointer" onClick={()=>setOpen(!open)} /> 
+        <div className={`fixed left-0 top-0 h-full bg-Bgside ${isDesktop ? 'w-64' : 'w-24'} flex flex-col py-4 px-3 text-white font-Roboto ${!isDesktop ? 'items-center ' : ''} transition-all duration-300`} style={{ zIndex: 100 }}>
+        <div className={`flex items-center mb-11 font-Poppins text-lg transition-all duration-300 gap-2 ${isDesktop ? 'justify-center' : ''}`}>
+                
+            <img src="/img/pngwing.com (1).png" alt="Nama Gambar" className=" w-8"/>
+                {isDesktop && <h1>BayuMusic</h1>}
+            </div>
+
+            <div>
+                
+                <Link
+                    to="/"
+                    className={`flex items-center space-x-2 p-3 ${
+                        isDesktop ? "hover:bg-slate-700 rounded" : ""
+                    }`}
+                >
+                    <BiHomeCircle size="20" />
+                    {isDesktop && <span>Explore</span>}
+                    
+                </Link>
+                <Link
+                    to="/"
+                    className={`flex items-center space-x-2 p-3 ${
+                        isDesktop ? "hover:bg-slate-700 rounded" : ""
+                    }`}
+                >
+                    <MdOutlineLibraryMusic size="20" />
+                    {isDesktop && <span>Genre</span>}
+                </Link>
+                <Link
+                    to="/"
+                    className={`flex items-center space-x-2 p-3 ${
+                        isDesktop ? "hover:bg-slate-700 rounded" : ""
+                    }`}
+                >
+                    <BsFillPeopleFill size="20" />
+                    {isDesktop && <span>Artist</span>}
+                </Link>
+            </div>
+
+                <div className="py-10">
+                    <h1 className="pl-3 pb-1 text-xs text-gray-400">Library</h1>
+                    <Link
+                        to="/"
+                        className={`flex items-center space-x-2 p-3 ${
+                            isDesktop ? "hover:bg-slate-700 rounded" : ""
+                        }`}
+                        >
+                        <PiPlaylistFill size="20" />
+                        {isDesktop && <span>Playlist</span>}
+                    </Link>
+                    <Link
+                        to="/"
+                        className={`flex items-center space-x-2 p-3 ${
+                            isDesktop ? "hover:bg-slate-700 rounded" : ""
+                        }`}
+                    >
+                        <BsFillHeartFill size="20" />
+                        {isDesktop && <span>Liked</span>}
+                    </Link>
                 </div>
 
-                <div className="mt-4 flex flex-col gap-4 relative text-white">
-                    {menus?.map((menu, i) => (
-                        <Link
-                            to={menu?.link} key={i} className={` ${menu?.margin && "mt-5"} group flex items-center text-sm  gap-3.5 font-medium p-2 hover:bg-gray-800 rounded-md`}>
-                            <div>
-                                {React.createElement(menu?.icon, {size: "20"})}
-                            </div>
-                            <h2 style={{transitionDelay: `${i + 3}00ms`}}  
-                            className={`whitespace-pre duration-500 ${!open && 'opacity-0 translate-x-8 overflow-hidden'} `}>{menu?.name}</h2>
-                        </Link>
-                    ))}
+
+                <div className="py-4">
+                    <h1 className="pl-3 pb-1 text-xs text-gray-400">Logout</h1>
+                    <Link
+                        to="/"
+                        className={`flex items-center space-x-2 p-3 ${
+                            isDesktop ? "hover:bg-slate-700 rounded" : ""
+                        }`}
+                    >
+                        <FiLogOut size="20" />
+                        {isDesktop && <span>Logout</span>}
+                    </Link>
                 </div>
-            </div>
         </div>
     );
 };
